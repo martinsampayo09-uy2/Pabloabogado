@@ -714,7 +714,19 @@ transition: opacity 0.2s ease,transform 0.2s ease;
     transform: scale(1.2);    }
   .top-bar.hidden {
     display: none; } </style></head><body>
-
+<div id="top-bar" class="top-bar">
+    <div class="top-bar-content">
+<span>🏗️ En un futuro... <span class="domain-highlight">web</span></span> 
+ Dr: Pablo Alesandre <span class="domain-highlight">.com   🚧</span></div> </span> 
+ <button id="close-top-bar" class="close-btn" aria-label="Cerrar anuncio">X</button></div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+      const topBar = document.getElementById("top-bar");
+      const closeBtn = document.getElementById("close-top-bar");
+  if (closeBtn && topBar){
+closeBtn.addEventListener("click",function() {
+  topBar.classList.add("hidden"); });  }   });
+  </script> 
 <div class="cinta-legal">  
     <div class="contenido-cinta">  
         <span class="item-noticia">⚖️ Defensas Penales</span>  
@@ -1210,7 +1222,9 @@ document.addEventListener("DOMContentLoaded", () => {
 <div class="bloque-confianza">  
     <div class="item">✔️ Atención Profesional</div>  
     <div class="item">✔️ Confidencialidad Asegurada</div>  
-    <div class="item">✔️ Experiencia en Litigios Complejos</div> </div></b>
+    <div class="item">✔️ Experiencia en Litigios Complejos</div>  
+</div> 
+</b>
 
 <!-- FOOTER 2 COLUMNAS ESTILO PABLO -->
 <footer style="background-color: var(--primario); color: #ffffff; padding: 2rem 1.5rem 1rem; border-top: 3px solid var(--secundario); text-align: left; font-family: 'Inter', sans-serif;">
@@ -1234,32 +1248,6 @@ document.addEventListener("DOMContentLoaded", () => {
   </div>
 </footer>
 
-<!-- MODALES OCULTOS -->
-<div id="modal-privacidad" style="display: none; position: fixed; inset: 0; background: rgba(15, 28, 63, 0.8); z-index: 999999; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(3px);">
-  <div style="background: #fff; border-radius: 8px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 1.5rem; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.4); font-family: 'Inter', sans-serif; color: #333;">
-    <button onclick="cerrarModal('modal-privacidad')" style="position: absolute; top: 12px; right: 12px; background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: var(--primario); font-size: 1rem; display: flex; align-items: center; justify-content: center;">✖</button>
-    <h3 style="color: var(--primario); font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 2px solid var(--secundario); padding-bottom: 5px; display: inline-block;">Política de Privacidad</h3>
-    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;">En <strong>Pablo Alesandre</strong> respetamos tu privacidad. Los datos que ingresás en el formulario (nombre, CI, fecha, asunto) se utilizan únicamente para responder tu consulta y coordinar el servicio.</p>
-    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;">No compartimos tu información con terceros. Los datos se conservan solo el tiempo necesario para gestionar el servicio solicitado.</p>
-    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;">Conforme a la <strong>Ley 18.331 de Protección de Datos Personales</strong> de Uruguay, podés solicitar el acceso, rectificación o eliminación de tus datos escribiéndonos a <a href="https://wa.me/59898616458" target="_blank" style="color: var(--secundario); text-decoration: underline;">nuestro WhatsApp</a>.</p>
-    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;">Al enviar el formulario, aceptás esta política.</p>
-  </div>
-</div>
-
-<div id="modal-terminos" style="display: none; position: fixed; inset: 0; background: rgba(15, 28, 63, 0.8); z-index: 999999; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(3px);">
-  <div style="background: #fff; border-radius: 8px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 1.5rem; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.4); font-family: 'Inter', sans-serif; color: #333;">
-    <button onclick="cerrarModal('modal-terminos')" style="position: absolute; top: 12px; right: 12px; background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: var(--primario); font-size: 1rem; display: flex; align-items: center; justify-content: center;">✖</button>
-    <h3 style="color: var(--primario); font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 2px solid var(--secundario); padding-bottom: 5px; display: inline-block;">Términos y Condiciones</h3>
-    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>1. Servicio:</strong> Pablo Alesandre brinda servicios legales, jurídicos y notariales en Montevideo, Uruguay.</p>
-    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>2. Plazos:</strong> El tiempo estimado de respuesta y gestión puede variar según la complejidad del caso y las condiciones judiciales.</p>
-    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>3. Honorarios:</strong> Los precios publicados son orientativos. El valor final se confirma al momento de coordinar el servicio según la complejidad del caso.</p>
-    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>4. Responsabilidad:</strong> No nos hacemos responsables por la veracidad de los documentos entregados por el cliente.</p>
-    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>5. Pagos:</strong> Se coordinan al momento de la consulta.</p>
-    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>6. Datos personales:</strong> El tratamiento de datos se rige por nuestra Política de Privacidad conforme a la Ley 18.331.</p>
-    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;">Para consultas escribinos a <a href="https://wa.me/59898616458" target="_blank" style="color: var(--secundario); text-decoration: underline;">nuestro WhatsApp</a>.</p>
-  </div>
-</div>
-
 <div id="chat-circle" onclick="toggleChat()">💬</div>  
 <div id="chat-container">  
     <div id="chat-header">
@@ -1271,16 +1259,11 @@ document.addEventListener("DOMContentLoaded", () => {
     </div>  
     <div class="chat-input-area">  
         <input type="text" id="user-input" placeholder="Escribe tu consulta aquí..." onkeypress="if(event.keyCode==13) sendMessage()">  
-        <button class="btn-enviar-chat" onclick="sendMessage()">➤</button></div></div>  
-<script>  
-// FUNCIONES PARA LAS POLÍTICAS
-function abrirModal(id) {
-    document.getElementById(id).style.display = 'flex';
-document.body.style.overflow = 'hidden'; }
-function cerrarModal(id) {
-    document.getElementById(id).style.display = 'none';
- document.body.style.overflow = ''; }
+        <button class="btn-enviar-chat" onclick="sendMessage()">➤</button>
+    </div>  
+</div>  
 
+<script>  
 function toggleMenu() {  
     const menu = document.getElementById('navMenu');  
     menu.classList.toggle('active'); 
@@ -1391,13 +1374,13 @@ function enviarAgenda(e) {
 function toggleZoom(event, elemento) { 
     event.stopPropagation(); 
     if (elemento.classList.contains('agrandado')) {
-elemento.classList.remove('agrandado');
+        elemento.classList.remove('agrandado');
     } else {
-document.querySelectorAll('.diploma-card').forEach(card => card.classList.remove('agrandado'));
-elemento.classList.add('agrandado'); } }
+        document.querySelectorAll('.diploma-card').forEach(card => card.classList.remove('agrandado'));
+        elemento.classList.add('agrandado'); } }
 document.addEventListener('click', function(event) {
-if (!event.target.closest('.diploma-card')) {
-document.querySelectorAll('.diploma-card').forEach(card => card.classList.remove('agrandado')); } });
+    if (!event.target.closest('.diploma-card')) {
+        document.querySelectorAll('.diploma-card').forEach(card => card.classList.remove('agrandado')); } });
 const mensajes = [
     "⚖️ Agenda abierta para consultas.",
     "📅 Quedan turnos disponibles esta semana.",
@@ -1415,10 +1398,4 @@ function mostrarNotificacion() {
         indice = (indice + 1) % mensajes.length; } }
 setInterval(mostrarNotificacion, 12000);
 setTimeout(mostrarNotificacion, 3000);
-
-// Poner el año automático en el footer
-document.addEventListener("DOMContentLoaded", function () {
-    const yearEl = document.getElementById('year-pablo');
-    if (yearEl) yearEl.textContent = new Date().getFullYear();
-});
 </script> </body></html>
