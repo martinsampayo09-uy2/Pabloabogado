@@ -1,0 +1,1424 @@
+<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pablo Alesandre</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <script>  
+    // ❌ Bloqueos de seguridad estrictos (sin alertas)
+    document.addEventListener("contextmenu", e => e.preventDefault());  
+    document.addEventListener("keydown", e => {  
+        if (e.key === "F12" || e.key === "F8" || (e.ctrlKey && e.shiftKey && (e.key === "I" || e.key === "J")) || (e.ctrlKey && e.key === "u")) {  
+            e.preventDefault(); }  });  
+// 📅 Validación de Agenda Estricta
+    document.addEventListener("DOMContentLoaded", () => {
+        const fechaInput = document.getElementById("fecha");
+        const horaInput = document.getElementById("hora");
+        function obtenerFechaHoy() {
+            const hoy = new Date();
+            const yyyy = hoy.getFullYear();
+            const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+            const dd = String(hoy.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;  }
+        function obtenerHoraMinimaHoy() {
+            const ahora = new Date();
+            let horaActual = ahora.getHours();
+            const minutoActual = ahora.getMinutes();
+            if (minutoActual > 0) {
+                horaActual += 1;  }
+            if (horaActual < 9) {
+                 horaActual = 9;  }
+       return `${String(horaActual).padStart(2, '0')}:00`; }
+         const fechaHoy = obtenerFechaHoy();
+        fechaInput.min = fechaHoy; 
+        horaInput.min = "09:00";
+        horaInput.max = "20:00";
+        
+        fechaInput.addEventListener("change", () => {
+            if (!fechaInput.value) return;
+            const fechaHoyActualizada = obtenerFechaHoy();
+            if (fechaInput.value < fechaHoyActualizada){
+                fechaInput.value = "";
+                horaInput.value = "";
+                return; 
+            }
+            const fechaSeleccionada = new Date(fechaInput.value + 'T00:00:00');
+            const dia = fechaSeleccionada.getDay();
+            if (dia === 0 || dia === 6) {
+                fechaInput.value = "";
+                horaInput.value = "";
+                return; 
+            }
+            if (fechaInput.value == fechaHoyActualizada) {
+                const horaMinima = obtenerHoraMinimaHoy();
+                if (parseInt(horaMinima.split(':')[0]) > 20) {
+                    fechaInput.value = "";
+                    horaInput.value = "";
+                    return; 
+                }
+                horaInput.min = horaMinima; 
+            } else {
+                horaInput.min = "09:00"; 
+            }
+            if (horaInput.value && horaInput.value < horaInput.min) {
+                horaInput.value = ""; 
+            }  
+        });
+        
+        horaInput.addEventListener("change", () => {
+            if (!horaInput.value) return;
+            const fechaHoyActualizada = obtenerFechaHoy();
+            if (fechaInput.value == fechaHoyActualizada) {
+                const horaMinima = obtenerHoraMinimaHoy();
+                if (horaInput.value < horaMinima) {
+                    horaInput.value = ""; } }  }); });
+    </script>  
+    <style>  
+    :root { 
+        --primario: #0f1c3f;
+        --secundario: #c5a059; 
+        --oscuro: #222222;
+        --claro: #f8f9fa;
+        --bot-color: #27ae60; }  
+    * { 
+        box-sizing: border-box; 
+        margin: 0;
+        padding: 0;
+    }   
+    body { 
+        font-family: 'Inter', sans-serif; 
+        background-color: #ffffff; 
+        color: var(--oscuro); 
+        user-select: none; 
+        scroll-behavior: smooth; 
+        line-height: 1.6;
+    }  
+   header {
+        background-color: var(--primario);
+        padding: 1rem 1.5rem;
+        position: fixed; 
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10000; 
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 3px solid var(--secundario);
+    }
+    .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px; }
+    .site-logo {
+        height: 38px;
+        width: auto;
+        object-fit: contain;
+    }
+
+    .logo {
+        color: #ffffff;
+        font-size: 1.1rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+        white-space: nowrap; 
+    }
+    .logo span {
+        color: var(--secundario);
+    }
+    .menu-toggle { 
+        font-size: 24px; 
+        cursor: pointer; 
+        color: #ffffff; 
+        display: block;  
+    }  
+    .nav-menu { 
+        position: fixed; 
+        top: 59px; 
+        left: 0; 
+        width: 100%; 
+        background: var(--primario); 
+        display: none; 
+        flex-direction: column; 
+        border-bottom: 3px solid var(--secundario); 
+        z-index: 9999; 
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+    }
+    .nav-menu.active {
+        display: flex !important;
+    }
+    nav a {
+        color: #ffffff;
+        text-decoration: none;
+        padding: 15px 20px;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        transition: color 0.3s; 
+    }
+    nav a:hover {
+        color: var(--secundario); 
+    }
+    
+.hero {
+        background: linear-gradient(rgba(15, 28, 63, 0.88), rgba(15, 28, 63, 0.88)), url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80') no-repeat center center/cover;
+        min-height: 55vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #ffffff;
+        padding: 7rem 1rem 2rem 1rem; }
+   .hero-border-box {
+        border: 1px solid rgba(197, 160, 89, 0.4);
+        padding: 1.5rem;
+        width: 100%;
+        max-width: 700px;
+        border-radius: 4px; 
+    }
+    .hero h1{
+        font-size: 1.2rem;
+        font-weight: 400;
+        color:#fff;
+        letter-spacing:1px;
+        text-transform:uppercase;
+        margin-bottom:10px;
+    }
+    .divisor-oro { 
+        width: 60px; 
+        height: 2px; 
+        background: var(--secundario); 
+        margin: 12px auto; 
+    }  
+    .hero h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        line-height: 1.3; 
+    }
+    .hero p {
+        font-size: 0.95rem;
+        color: #e0e0e0;
+        margin-bottom: 1.8rem;
+        font-style: italic;
+    }
+    .btn {
+        background-color: var(--secundario);
+        color: var(--primario);
+        padding: 0.8rem 2rem;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: background 0.3s, transform 0.2s;
+        display: inline-block;
+        border: none;
+        cursor: pointer;
+    }
+    .btn:hover {
+        background-color: #b38f4b;
+        transform: translateY(-2px);
+    }
+    .cinta-legal { 
+        width: 100%; 
+        overflow: hidden; 
+        background: #111a33; 
+        padding: 12px 0; 
+        white-space: nowrap; 
+        border-bottom: 2px solid var(--secundario); 
+    }  
+    .contenido-cinta { 
+        display: inline-flex; 
+        animation: scroll-chico 20s linear infinite;
+    }  
+    .item-noticia { 
+        color: #fff; 
+        font-size: 0.8rem; 
+        padding: 0 25px; 
+        text-transform: uppercase; 
+        font-weight: bold; 
+        letter-spacing: 1px; 
+    }  
+    @keyframes scroll-chico { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }  
+    
+    section, .container { 
+        padding: 3.5rem 1rem; 
+        max-width: 1200px; 
+        margin: 0 auto; 
+    }  
+    .titulo-seccion { 
+        text-align: center;
+        font-size: 1.6rem;
+        color: var(--primario);
+        margin-bottom: 2.5rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+    }  
+    .titulo-seccion::after {
+        content: '';
+        display: block;
+        width: 50px;
+        height: 3px;
+        background-color: var(--secundario);
+        margin: 0.6rem auto 0;
+    }
+    .grid-detalles { 
+        display: grid; 
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 0.8rem;  
+    }  
+    .tarjeta-detalle { 
+        background: var(--claro); 
+        padding: 1.2rem 0.6rem; 
+        border-radius: 6px; 
+        text-align: center; 
+        border-top: 4px solid var(--primario); 
+        box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+        cursor: pointer; 
+        transition: transform 0.3s, border-top-color 0.3s, background 0.3s; 
+    }  
+    .tarjeta-detalle:hover {
+        transform: translateY(-4px);
+        border-top-color: var(--secundario);
+    }
+    .tarjeta-detalle h3 {
+        color: var(--primario);
+        font-size: 0.85rem; 
+        font-weight: 700;
+        letter-spacing: 0.5px;
+    }
+    .contenido-oculto { 
+        max-height: 0; 
+        overflow: hidden; 
+        transition: max-height 0.4s ease, margin-top 0.4s ease; 
+        font-size: 0.8rem; 
+        color: #555; 
+        text-align: center; 
+        line-height: 1.4;
+    }  
+    .tarjeta-detalle.activo { 
+        background: #ffffff; 
+        box-shadow: 0 6px 15px rgba(0,0,0,0.08); 
+        border-top-color: var(--secundario);
+    }  
+    .tarjeta-detalle.activo .contenido-oculto { 
+        max-height: 250px; 
+        margin-top: 10px; 
+    }  
+    .sobre-mi {
+        background-color: var(--claro);
+        max-width: 100%;
+        border-top: 1px solid #eee;
+        border-bottom: 1px solid #eee;
+    }
+    .sobre-mi-contenido {
+        max-width: 850px;
+        margin: 0 auto;
+        text-align: center;  
+    }
+    .sobre-mi-contenido p {
+        font-size: 1rem;
+        color: #444;
+        line-height: 1.7;  
+    }
+    .contacto-contenedor {
+        display: grid;
+        grid-template-columns: 1fr; 
+        gap: 2rem; 
+        background: #ffffff; 
+    }
+    .info-contacto h3 {
+        color: var(--primario);
+        margin-bottom: 0.8rem;
+        font-size: 1.15rem; 
+    }
+    .info-contacto p {
+        margin-bottom: 0.6rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem; 
+        line-height: 1.4;  
+    }
+    .info-contacto strong {
+        color: var(--primario);  
+    }
+    .seccion-agenda { 
+        background: var(--claro); 
+        padding: 1.2rem; 
+        border-radius: 8px; 
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border-top: 4px solid var(--secundario);
+    }  
+    .form-agenda { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 0.8rem; 
+    }  
+    .form-agenda input, .form-agenda select, .form-agenda textarea { 
+        width: 100%;
+        padding: 0.75rem; 
+        border: 1px solid #cccccc; 
+        border-radius: 4px; 
+        font-size: 0.9rem; 
+        outline: none; 
+        background-color: #ffffff; 
+    }  
+    .form-agenda input:focus, .form-agenda select:focus { 
+        border: 2px solid var(--primario);  
+    }  
+    .btn-enviar-agenda { 
+        background: var(--primario); 
+        color: white; 
+        border: none; 
+        padding: 0.85rem; 
+        border-radius: 4px; 
+        font-weight: bold; 
+        font-size: 0.9rem;
+        cursor: pointer; 
+        text-transform: uppercase;
+        transition: background 0.3s;  
+    }  
+    .btn-enviar-agenda:hover {
+        background: #172b5c; 
+    }
+    .bg-testimonios {
+        background-color: var(--claro);
+        max-width: 100%;   
+    }
+    .track-testimonios { display: flex; gap: 15px; width: max-content; animation: scrollTestimonios 25s linear infinite; }  
+    .testimonio { min-width: 210px; background: #ffffff; border-radius: 8px; padding: 1rem 0.8rem; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.04); border-bottom: 4px solid var(--primario); }  
+    .testimonio img { width: 45px; height: 45px; border-radius: 50%; margin-bottom: 8px; border: 2px solid var(--secundario); object-fit: cover; }  
+    .testimonio p { font-style: italic; font-size: 0.8rem; color: #555; margin-bottom: 6px; line-height: 1.35; }
+    .testimonio h4 { font-size: 0.75rem; color: var(--primario); font-weight: bold; text-transform: uppercase; }
+    @keyframes scrollTestimonios { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }  
+    
+    #chat-circle { position: fixed; bottom: 15px; right: 15px; width: 55px; height: 55px; border-radius: 50%; background: var(--bot-color); color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 3000; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }  
+    #chat-container { display: none; position: fixed; bottom: 80px; right: 15px; width: 290px; height: 400px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); z-index: 3000; flex-direction: column; overflow: hidden; border: 1px solid #e2e8f0; }  
+    #chat-header { background: var(--primario); color: white; padding: 0.8rem; font-size: 0.9rem; font-weight: bold; display: flex; justify-content: space-between; border-bottom: 2px solid var(--secundario); }  
+    #chat-box { flex: 1; padding: 12px; overflow-y: auto; font-size: 0.8rem; display: flex; flex-direction: column; gap: 10px; background: #fdfdfd; scroll-behavior: smooth; }  
+    .bot-msg { background: #f1f5f9; padding: 8px 10px; border-radius: 8px; align-self: flex-start; max-width: 85%; line-height: 1.4; color: #333; }  
+    .bot-msg a { display: inline-block; word-break: break-word; }
+    .user-msg { background: #e0f2fe; padding: 8px 10px; border-radius: 8px; align-self: flex-end; max-width: 85%; color: #0369a1; font-weight: 500; }  
+    .chat-input-area { padding: 8px; border-top: 1px solid #eee; display: flex; gap: 6px; background: #fff; }  
+    .chat-input-area input { flex: 1; border: 1px solid #ddd; padding: 8px; border-radius: 4px; outline: none; font-size: 0.8rem; }  
+    .btn-enviar-chat { background: var(--bot-color); color: white; border: none; padding: 0 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }  
+    
+    footer {
+        background-color: var(--primario);
+        color: #ffffff;
+        text-align: center;
+        padding: 2rem 1rem;
+        font-size: 0.8rem;
+        border-top: 3px solid var(--secundario);
+        letter-spacing: 0.5px;
+        line-height: 1.4;   
+    }
+    .carrusel-general { 
+        width: 100%; 
+        overflow: hidden; 
+        padding: 1.5rem 0; 
+        background: #fff; 
+    }  
+    .track-diplomas { 
+        display: flex; 
+        flex-direction: row; 
+        gap: 8px; 
+        width: 100%;
+        max-width: 600px; 
+        margin: 0 auto;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }  
+    .diploma-card { 
+        flex: 1; 
+        min-width: 0; 
+        cursor: pointer;
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), flex 0.4s ease, opacity 0.4s ease, box-shadow 0.4s ease;
+        position: relative;
+        z-index: 1; 
+    }  
+    .diploma-card img { 
+        width: 100%; 
+        height: auto; 
+        display: block;
+        border-radius: 6px; 
+        object-fit: cover;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        border: 1px solid #e2e8f0; 
+    }  
+    .diploma-card.agrandado {
+        flex: 2.2 !important; 
+        transform: scale(1.25); 
+        z-index: 99; 
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    }
+    @media (min-width: 768px) {
+        header { padding: 1rem 2rem; }
+        .logo { font-size: 1.3rem; }
+        .menu-toggle { display: none; } 
+        .nav-menu { 
+            position: static; 
+            display: flex; 
+            flex-direction: row; 
+            width: auto; 
+            background: transparent; 
+            border-bottom: none; 
+            box-shadow: none;
+        }
+        nav a { 
+            padding: 0 0 0 1.5rem; 
+            border-bottom: none; 
+            font-size: 0.95rem;  
+        }
+        .hero-border-box { padding: 2.5rem; }
+        .hero h1 { font-size: 14px; letter-spacing: 5px; }
+        .hero h2 { font-size: 2.5rem; }
+        .hero p { font-size: 1.1rem; }
+        section, .container { padding: 4.5rem 1.5rem; }
+        .titulo-seccion { font-size: 1.8rem; }
+        .grid-detalles { grid-template-columns: repeat(2, 1fr); } 
+        .tarjeta-detalle h3 { font-size: 1.1rem; }
+        .contacto-contenedor { grid-template-columns: repeat(2, 1fr); gap: 3rem; } 
+        .info-contacto h3 { font-size: 1.3rem; }
+        .info-contacto p { font-size: 0.95rem; margin-bottom: 1rem; }
+        #chat-container { width: 320px; height: 460px; bottom: 95px; right: 20px; }
+        #chat-circle { bottom: 20px; right: 20px; width: 60px; height: 60px; font-size: 26px; }
+        .track-diplomas {
+            max-width: 600px;
+            margin: 0 auto;
+            gap: 15px;  
+        } 
+    }
+    @media (min-width: 1024px) {
+        .grid-detalles { grid-template-columns: repeat(4, 1fr); }  
+    }
+    .bloque-confianza {
+        display: flex;
+        justify-content: space-between;
+        gap: 8px; 
+        width: 100%;
+        padding: 10px 5px;  
+    }
+    .bloque-confianza .item {
+        flex: 1; 
+        text-align: center;
+        font-size: 11px; 
+        line-height: 1.3;
+        color: #333;   
+    }
+    @media (min-width: 768px) {
+        .bloque-confianza .item {
+            font-size: 16px; 
+            gap: 20px;  
+        }  
+    }
+    .notificacion {
+        position: fixed;
+        left: 15px;
+        bottom: 20px;
+        background: #0f1c3f;
+        color: #fff;
+        padding: 12px 15px;
+        border-left: 5px solid #c5a059;
+        border-radius: 8px;
+        font-size: 13px;
+        max-width: 250px;
+        box-shadow: 0 5px 15px rgba(0,0,0,.25);
+        transform: translateX(-120%);
+        transition: .5s;
+        z-index: 99999; 
+    }
+    .notificacion.mostrar {
+        transform: translateX(0); 
+    }
+    .contenedor-estados-whatsapp {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 0 15px; 
+    }
+    .estado-whatsapp {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #fff;
+        border-left: 5px solid var(--secundario);
+        border-top: 1px solid #ececec;
+        border-radius: 8px;
+        padding: 15px;
+        box-shadow: 0 66px 15px rgba(0,0,0,.08);
+        transition: .3s;
+        margin: 0;
+    }
+    .estado-whatsapp:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(0,0,0,.15);
+    }
+    .estado-punto {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+    .estado-texto {
+        display: flex;
+        flex-direction: column;
+    }
+    .estado-texto strong {
+        color: var(--primario);
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+    .estado-texto span {
+        color: #555;
+        font-size: 13px;
+    }
+    .estado-texto b {
+        color: var(--secundario);
+    }
+    .en-linea {
+        background: #25D366;
+        animation: pulsoWhatsapp-verde 1.5s infinite;
+    }
+    .fuera-linea {
+        background: #e53935;
+        animation: pulsoWhatsapp-rojo 1.5s infinite;
+    }
+    @keyframes pulsoWhatsapp-verde {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37,211,102,.7); }
+        70% { transform: scale(1.15); box-shadow: 0 0 0 12px rgba(37,211,102,0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(37,211,102,0); } 
+    }
+    @keyframes pulsoWhatsapp-rojo {
+        0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(229,57,53,.7); }
+        70% { transform: scale(1.15); box-shadow: 0 0 0 12px rgba(229,57,53,0); }
+        100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(229,57,53,0); } 
+    }
+    @media(max-width: 768px) {
+        .contenedor-estados-whatsapp {
+            flex-direction: row;
+            gap: 8px;
+            margin: 15px 8px;
+            padding: 0; 
+        }
+        .estado-whatsapp {
+            flex: 1;
+            min-width: 0;
+            padding: 8px;
+            gap: 6px; 
+        }
+        .estado-punto {
+            width: 10px;
+            height: 10px; 
+        }
+        .estado-texto strong {
+            font-size: 10.5px;
+            line-height: 1.2;
+            margin-bottom: 2px; 
+        }
+        .estado-texto span {
+            font-size: 9px;
+            line-height: 1.2;
+        } 
+    }
+    @media (max-width: 480px) {
+        .track-diplomas {
+            gap: 5px; 
+            padding: 0 5px; 
+        }
+        .diploma-card.agrandado {
+            flex: 2.5 !important; 
+            transform: scale(1.18); }  }
+    </style> 
+<style id="_goober"> .go1475592160{height:0;}.go1671063245{height:auto;}.go1888806478{display:flex;flex-wrap:wrap;flex-grow:1;}@media (min-width:600px){.go1888806478{flex-grow:initial;min-width:288px;}}.go167266335{background-color:#313131;font-size:0.875rem;line-height:1.43;letter-spacing:0.01071em;color:#fff;align-items:center;padding:6px 16px;border-radius:4px;box-shadow:0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);}.go3162094071{padding-left:20px;}.go3844575157{background-color:#313131;}.go1725278324{background-color:#43a047;}.go3651055292{background-color:#d32f2f;}.go4215275574{background-color:#ff9800;}.go1930647212{background-color:#2196f3;}.go946087465{display:flex;align-items:center;padding:8px 0;}.go703367398{display:flex;align-items:center;margin-left:auto;padding-left:16px;margin-right:-8px;}.go3963613292{width:100%;position:relative;transform:translateX(0);top:0;right:0;bottom:0;left:0;min-width:288px;}.go1141946668{box-sizing:border-box;display:flex;max-height:100%;position:fixed;z-index:1400;height:auto;width:auto;transition:top 300ms ease 0ms,right 300ms ease 0ms,bottom 300ms ease 0ms,left 300ms ease 0ms,max-width 300ms ease 0ms;pointer-events:none;max-width:calc(100% - 40px);}.go1141946668 .notistack-CollapseWrapper{padding:6px 0px;transition:padding 300ms ease 0ms;}@media (max-width:599.95px){.go1141946668{width:100%;max-width:calc(100% - 32px);}}.go3868796639 .notistack-CollapseWrapper{padding:2px 0px;}.go3118922589{top:14px;flex-direction:column;}.go1453831412{bottom:14px;flex-direction:column-reverse;}.go4027089540{left:20px;}@media (min-width:600px){.go4027089540{align-items:flex-start;}}@media (max-width:599.95px){.go4027089540{left:16px;}}.go2989568495{right:20px;}@media (min-width:600px){.go2989568495{align-items:flex-end;}}@media (max-width:599.95px){.go2989568495{right:16px;}}.go4034260886{left:50%;transform:translateX(-50%);}@media (min-width:600px){.go4034260886{align-items:center;}}</style></head>
+<body data-gptw="">
+
+<header>
+    <div class="brand">
+        <!-- Logo cargado desde tu carpeta 'imagen' -->
+        <img src="imagen/logo.jpeg" alt="Logo Pablo Alesandre" class="site-logo">
+        <span class="logo">⚖️ DR: <span>PABLO ALESANDRE</span></span>
+    </div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>  
+    <nav class="nav-menu" id="navMenu">
+        <a href="#inicio" onclick="toggleMenu()">Inicio</a>
+        <a href="#servicios" onclick="toggleMenu()">Servicios</a>
+        <a href="#trayectoria" onclick="toggleMenu()">Sobre Mí</a>
+        <a href="#contacto" onclick="toggleMenu()">CONTACTO</a>
+        <a href="#solicitud" onclick="toggleMenu()">SOLICITUD DE TURNO</a>
+        <a href="#novedades" onclick="toggleMenu()">Novedades</a>
+        <a href="uruleyes.html">URULEYES</a>
+      </nav> 
+</header>
+
+<section class="hero" id="inicio">
+    <div class="hero-border-box">
+        <h1><b>Pablo Alesandre Aizcorbe </b></h1>
+        <div class="divisor-oro"></div>
+        <p><strong>ESTUDIO JURÍDICO &amp; NOTARIAL</strong></p>
+        <p>Asesoramiento legal profesional en Montevideo. Soluciones estratégicas con firmeza, honestidad y compromiso. </p>
+        <a href="#solicitud" class="btn">Solicitar Consulta</a> 
+    </div> 
+</section> 
+
+<style>
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;  }
+  .top-bar {
+    background: linear-gradient(90deg, #4f46e5, #7c3aed);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 800; 
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.3px;    }
+  .top-bar-content {
+    flex-grow: 1;
+    text-align: center;  }
+ .domain-highlight {
+    color: #facc15; 
+    font-weight: 900; }
+  .close-btn {
+    background: none;
+    border: none;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0 10px;
+    line-height: 1;
+    opacity: 0.85;
+transition: opacity 0.2s ease,transform 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;    }
+  .close-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);    }
+  .top-bar.hidden {
+    display: none; } </style></head><body>
+
+<div class="cinta-legal">  
+    <div class="contenido-cinta">  
+        <span class="item-noticia">⚖️ Defensas Penales</span>  
+        <span class="item-noticia">💼 Reclamos Laborales</span>  
+        <span class="item-noticia">✍️ Escribanía Pública</span>  
+        <span class="item-noticia">📜 Sucesiones Rápidas</span>  
+        <span class="item-noticia">🏛️ Divorcios y Familia</span>  
+        <span class="item-noticia">⚖️ Defensas Penales</span>  
+        <span class="item-noticia">💼 Reclamos Laborales</span>  
+        <span class="item-noticia">✍️ Escribanía Pública</span>  
+        <span class="item-noticia">📜 Sucesiones Rápidas</span>  
+        <span class="item-noticia">🏛️ Divorcios y Familia</span>   
+    </div>   
+</div>  
+<!-- Contenedor unificado de estados de WhatsApp y Horarios -->
+<div class="contenedor-estados-whatsapp">
+    <!-- Bloque 1: Horario / Estado Abierto-Cerrado (MÁS GRANDE) -->
+    <div class="estado-whatsapp bloque-horario">
+        <span id="estadoPunto" class="fuera-linea"></span>
+        <div class="estado-texto">
+            <strong id="estadoTitulo">CERRADO</strong>
+<span id="estadoMensaje"><b>Viernes</b><br>🕒 <b>23:58:57</b><br>Abre lunes 09:00</span> </div> </div>
+ <!-- Bloque 2: Estado de respuesta activa (TAMAÑO NORMAL / ESTÁNDAR) -->
+    <div class="estado-whatsapp bloque-respuesta">
+        <div class="estado-punto en-linea"></div>
+        <div class="estado-texto">
+            <strong class="titulo-pablo">Dr:Pablo está ocupado</strong>
+  <span class="mensaje-pablo">🕒 Tiempo estimado:<br><b>5 minutos...</b></span> 
+        </div> 
+    </div>
+</div>
+<style>
+html, body {
+    max-width: 100vw;
+    overflow-x: hidden;}
+.contenedor-estados-whatsapp {
+    display: flex;
+    gap: 12px; 
+    justify-content: center; 
+    align-items: stretch; 
+    padding: 15px;
+    font-family: sans-serif;
+    width: 100%;
+    max-width: 600px; 
+    margin: 20px auto; 
+    box-sizing: border-box;}
+.estado-whatsapp {
+    flex: 1; 
+    min-width: 0; 
+    padding: 14px 10px; 
+    border-radius: 8px;
+    background-color: #ffffff; 
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    box-sizing: border-box;}
+.estado-punto, #estadoPunto {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+}
+.en-linea { background-color: #25d366; }
+.fuera-linea { background-color: #ff3b30; }
+
+.estado-texto {
+    min-width: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.bloque-horario #estadoTitulo {
+    font-size: 1.25rem; 
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+}
+.bloque-horario #estadoMensaje {
+    font-size: 0.95rem; 
+    line-height: 1.4;
+    display: block;
+}
+.bloque-respuesta .titulo-pablo {
+    font-size: 1.1rem; 
+    font-weight: bold;
+    display: block;
+    margin-bottom: 4px;
+}
+.bloque-respuesta .mensaje-pablo {
+    font-size: 0.9rem;
+    display: block;
+    line-height: 1.3;
+}
+@media (max-width: 480px) {
+    .contenedor-estados-whatsapp {
+        gap: 6px; 
+        padding: 8px 4px;
+    }
+    .estado-whatsapp {
+        padding: 10px 6px;
+        gap: 4px;
+    }
+    .bloque-horario #estadoTitulo { font-size: 1rem; }
+    .bloque-horario #estadoMensaje { font-size: 0.78rem; }
+    
+    .bloque-respuesta .titulo-pablo { font-size: 0.88rem; }
+    .bloque-respuesta .mensaje-pablo { font-size: 0.75rem; }
+}
+</style>
+<script>
+function actualizarEstado(){
+    const ahora = new Date();
+    const dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const dia = ahora.getDay();
+    const hora = ahora.getHours();
+    const minutos = String(ahora.getMinutes()).padStart(2, "0");
+    const segundos = String(ahora.getSeconds()).padStart(2, "0");
+    const punto = document.getElementById("estadoPunto");
+    const titulo = document.getElementById("estadoTitulo");
+    const mensaje = document.getElementById("estadoMensaje");
+    if(!punto || !titulo || !mensaje) return;
+    let estado = "";
+    let texto = "";
+    
+    if(dia >= 1 && dia <= 5 && hora >= 9 && hora < 20){
+        punto.className = "en-linea";
+        estado = "ABIERTO";
+        texto = "⏰ Cierra hoy 20:00";
+    } else {
+        punto.className = "fuera-linea";
+        estado = "CERRADO";
+        if(dia == 5 && hora >= 20){
+            texto = "Abre lunes 09:00";
+        } else if(dia == 6){
+            texto = "Abre lunes 09:00";
+        } else if(dia == 0){
+            texto = "Abre mañana 09:00";
+        } else {
+            texto = "Abre hoy 09:00"; } }
+    titulo.innerHTML = estado;
+    mensaje.innerHTML = "<b>" + dias[dia] + "</b><br>🕒 <b>" + hora + ":" + minutos + ":" + segundos + "</b><br>" + texto;}
+actualizarEstado();
+setInterval(actualizarEstado, 1000);
+</script>
+<section id="servicios">
+<h2 class="titulo-seccion">Servicios</h2>
+<div class="grid-detalles">  
+<div class="tarjeta-detalle" onclick="toggleDetalle(this)">  
+<h3>⚖️ DERECHO CIVIL⏬</h3>  
+<div class="contenido-oculto">Accidentes de tránsito, redacción de contratos, cobro de deudas, daños y perjuicios, herencias y propiedades.</div>   </div>  
+<div class="tarjeta-detalle" onclick="toggleDetalle(this)">  
+<h3>🏛️ DERECHO PENAL⏬</h3>  
+<div class="contenido-oculto">Asistencia inmediata en fiscalía, comisarías, defensas en procesos penales complejas y representation 24/7.</div>  </div>  
+<div class="tarjeta-detalle" onclick="toggleDetalle(this)">  
+<h3>💼 DERECHO LABORAL⏬</h3>  
+<div class="contenido-oculto">Cálculo exacto de liquidaciones, despidos injustificados, accidentes de trabajo y audiencias en el MTSS.</div>  </div>  
+<div class="tarjeta-detalle" onclick="toggleDetalle(this)">  
+<h3>✍️ SERVICIOS NOTARIALES⏬</h3>  
+<div class="contenido-oculto">Trámites sucesorios, escrituras, poderes, certificaciones de firmas y asesoría notarial integral.</div> </div> </div>   </section>
+
+
+
+<section class="sobre-mi" id="trayectoria">
+    <div class="sobre-mi-contenido">
+        <h2 class="titulo-seccion">Historia</h2>
+        <p>El <b>Dr. Pablo Alesandre Aizcorbe</b> es egresado de la <b>Universidad de la República (UdelaR)</b>, donde obtuvo sus títulos de Abogado y Escribano Público. Con una sólida trayectoria en el sector legal de Uruguay, ofrece un trato personalizado, cercano y profesional.</p> 
+        <p>Su práctica se enfoca en la constante actualización en materia Penal y Laboral, asegurando una estrategia rigurosa y a medida para la resolución óptima de sus conflictos jurídicos.</p> 
+    </div>  
+</section>
+
+<div class="carrusel-general">  
+    <div class="track-diplomas" id="grupoDiplomas">  
+        <div class="diploma-card" onclick="toggleZoom(event, this)">
+            <img src="https://i.ibb.co/mFrqwvTR/1782963978738.png" alt="Título Abogado"> 
+        </div>  
+        <div class="diploma-card" onclick="toggleZoom(event, this)">
+            <img src="https://i.ibb.co/bj6BjhrH/1782964058714.png" alt="Título Escribano"> 
+        </div>  
+        <div class="diploma-card" onclick="toggleZoom(event, this)">
+            <img src="https://i.ibb.co/Xk4Znpyy/1782964131678.png" alt="Especialización"> 
+        </div> 
+    </div>  
+</div>  
+
+<div id="notificacion" class="notificacion mostrar">✍️ Services notariales disponibles.</div>
+<style>
+        .contenedor-propaganda {
+        text-align: center;       
+        max-width: 700px;         
+        margin: 40px auto;        
+        padding: 30px;
+        background-color: #f9f9f9; 
+        border: 1px solid #e0e0e0; 
+        font-family: sans-serif; }
+.titulo-seccion {
+        font-size: 24px;
+        font-weight: 800;         
+        color: #111111;
+        margin-top: 0;
+        margin-bottom: 15px;
+        text-transform: uppercase; }
+    .texto-destacado {
+        font-size: 18px;
+        font-weight: 700;         
+        color: #333333;
+        margin-bottom: 15px; }
+.texto-principal {
+        font-size: 16px;
+        font-weight: 600;         
+        color: #555555;
+        margin-bottom: 30px;  }
+    .boton-registro {
+        display: inline-block;
+        padding: 14px 32px;      
+        background-color: #002f6c; 
+        color: #ffffff;            
+        text-decoration: none;     
+        font-size: 16px;
+        font-weight: 700;         
+        text-transform: uppercase; 
+        letter-spacing: 0.5px;     
+        border-radius: 0px;        
+        transition: background-color 0.2s ease-in-out;}
+    .boton-registro:hover {
+        background-color: #001f4d; 
+        cursor: pointer; } </style>
+<section id="solicitud">
+<h2 class="titulo-seccion">SOLICITUD DE TURNO</h2>
+<h4>Agende una consulta llenando la solicitud</h4><p>Lunes a Viernes 9 a 20 hs
+Solo dentro de ese horario te permite reservar turno</p>
+<p><b>🏢 Atención únicamente con agenda previa.</b></p>  
+  <form class="form-agenda" onsubmit="enviarAgenda(event)">    
+<input type="text" id="nombre" placeholder="🪪 Nombre Completo" required="">    
+     <input type="text" id="CI" placeholder="🪪 CI" required="">  
+          <select id="asunto" required="">    
+   <option value="" disabled="" selected="" hidden="">Seleccione el caso</option>
+                    <option value="Penal">Derecho Penal</option>    
+                    <option value="Laboral">Derecho Laboral</option>    
+   <option value="Sucesiones / Escribanía">Sucesiones / Escribanía</option>    
+   <option value="Familia y Divorcios">Familia y Divorcios</option>    
+  <option value="Otro asunto">Otro asunto legal </option>   </select>    
+                <input type="text" id="fecha" placeholder="Seleccione la fecha ⬇️" required="" onfocus="(this.type='date')" onblur="if(!this.value) this.type='text'" onchange="this.style.color='#000'" min="2026-07-24">     
+                <input type="text" id="hora" placeholder="Seleccione la hora ⬇️" required="" onfocus="(this.type='time')" onblur="if(!this.value) this.type='text'" onchange="this.style.color='#000'" min="09:00" max="20:00">    
+                <button type="submit" class="btn-enviar-agenda">SOLICITAR CITA POR WHATSAPP</button> 
+            </form>  
+         
+    
+</section>
+<div class="bg-testimonios">
+    <div class="container" style="padding-bottom: 1.5rem;">  
+        <h2 class="titulo-seccion">Opiniones</h2>
+    </div>
+    <div style="width: 100%; overflow: hidden; padding-bottom: 2rem;">  
+        <div class="track-testimonios">  
+            <div class="testimonio">  
+   <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="María G.">  
+   <p>"Excelente profesional, resolvió mi sucesión en tiempo récord."</p>  
+                <h4>María G.</h4>  
+            </div>  
+            <div class="testimonio">  
+   <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Carlos R.">  
+   <p>"Atención inmediata y muy clara. Me sentí muy respaldado legalmente."</p>  
+                <h4>Carlos R.</h4>   
+            </div>  
+            <div class="testimonio">  
+   <img src="https://randomuser.me/api/portraits/women/22.jpg" alt="Laura S.">  
+  <p>"Muy humano y certero en sus respuestas. Totalmente recomendable."</p>  
+                <h4>Laura S.</h4>  
+            </div>  
+            <div class="testimonio">  
+    <img src="https://randomuser.me/api/portraits/women/45.jpg" alt="María G.">  
+    <p>"Excelente profesional, resolvió mi sucesión en tiempo récord."</p>  
+                <h4>María G.</h4> 
+            </div> 
+        </div> 
+    </div> 
+</div>
+<section id="novedades" style="padding-bottom: 0;">
+    <h2 class="titulo-seccion">Novedades</h2>
+    <div class="carrusel-general">
+ <div class="track-diplomas" id="grupoNovedades">
+ <div class="diploma-card" onclick="toggleZoom(event, this)"> <img src="https://i.ibb.co/4wPykJ6M/1784182494256.png" alt="Novedad 1"> </div>
+ <div class="diploma-card" onclick="toggleZoom(event, this)"> <img src="https://ecosdelhum.com.uy/download/multimedia.normal.a764437715c6c7c0.QWJvZ2Fkb3MgRCtpYV9ub3JtYWwud2VicA==.webp" alt="Novedad 2">  </div>
+<div class="diploma-card" onclick="toggleZoom(event, this)"> <img src="https://i.ibb.co/FkTJYRH2/1784183035801.png" alt="Novedad 3"> </div>
+ <div class="diploma-card" onclick="toggleZoom(event, this)"> <img src="https://i.ibb.co/5Wx8BsB1/FB-IMG-1784211520101.jpg" alt="Novedad 4"> </div> </div> </div> </section>
+ 
+<section class="presentacion">
+  <div class="presentacion-contenido">
+
+    <!-- Columna 1: Izquierda (Juego completo) -->
+    <div class="presentacion-izquierda">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdhFAmo7zRFu9Bl1B47uE67M7b1hNc_VO5um04B3Eu0KXD9mOe1eX-9iH-&amp;s=10" alt="Servicios Jurídicos">
+      <h4>Ley Nº 17.250:</h4>
+<h3> El Derecho del Consumidor</h3>
+      <p>
+ &ZeroWidthSpace;El derecho a la información está protegido por la Ley de Defensa del Consumidor
+&ZeroWidthSpace;Lo central (Artículo 6): Establece como derecho fundamental la información clara, veraz y suficiente sobre los productos o servicios (precio final con impuestos, riesgos y condiciones).
+&ZeroWidthSpace;La obligación: Todo lo que la empresa prometa en la publicidad se considera parte del contrato y es obligatorio cumplirlo. La "letra chica" engañosa no tiene validez.
+</p>
+</div>
+
+<!-- Columna 2: Derecha (Juego completo) -->
+    <div class="presentacion-derecha">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdhFAmo7zRFu9Bl1B47uE67M7b1hNc_VO5um04B3Eu0KXD9mOe1eX-9iH-&amp;s=10" alt="Asesoría Legal">
+      <h4>Ley Nº 19.981:</h4>
+<h3> Derecho a la Desconexión Laboral</h3><p>    
+&ZeroWidthSpace;En Uruguay, este derecho está regulado específicamente por la Ley Nº 19.981 (promulgada en 2021).
+&ZeroWidthSpace;Lo central: Establece que todo trabajador tiene derecho a desconectarse de los dispositivos digitales y del trabajo fuera de su horario.
+&ZeroWidthSpace;La obligación: El empleador no puede exigirte responder ni realizar tareas en tu tiempo de descanso, licencias o días libres.
+ </p> 
+ </div>
+</div>
+</section>
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+.presentacion{
+  background:#fff;
+  padding:20px 15px;
+}
+.presentacion-contenido{
+  display:flex;
+  align-items:flex-start; 
+  gap:30px;
+  max-width:1100px;
+  margin:auto;
+}
+.presentacion-izquierda,
+.presentacion-derecha{
+  flex:1;
+}
+
+.presentacion-izquierda img,
+.presentacion-derecha img{
+  width:100%;
+  max-width:180px;
+  height:auto;
+  border-radius:10px;
+  display:block;
+  margin:0 auto 15px;
+}
+
+.presentacion-izquierda h4{
+  color:#c5a059;
+  font-size:.75rem;
+  letter-spacing:2px;
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+.presentacion-izquierda h1{
+  color:#0f1c3f;
+  font-size:1.3rem;
+  margin-bottom:10px;
+}
+.presentacion-izquierda p,
+.presentacion-derecha p{
+  color:#555;
+  font-size:.85rem;
+  line-height:1.6;
+  margin-bottom:15px;
+}
+
+@media(min-width:768px){
+  .presentacion{
+    padding:60px;
+  }
+  .presentacion-izquierda h1{
+    font-size:2.8rem;
+  }
+  .presentacion-izquierda p,
+  .presentacion-derecha p{
+    font-size:1.1rem;
+  }
+  .presentacion-izquierda img,
+  .presentacion-derecha img{
+    max-width:420px;  } }
+</style>
+<section id="contacto">
+<h2 class="titulo-seccion">Contacto</h2>
+<p class="info-icon">📍
+<strong>Dirección:</strong>Av.18 de Julio y minas, Mdeo,Uy</p>
+<p class="info-icon">📞 <strong>Teléfono:</strong> <a href="tel:+59898616458" style="color: var(--azul-premium);">LLAMADA</a></p>
+<p class="info-icon">📱 <strong>WhatsApp:</strong> <a href="https://wa.me/59898616458" target="_blank" style="color: var(--verde-whatsapp);">Chatear ahora</a></p>
+<p class="info-icon">✉️ <strong>Email:</strong> <a href="mailto: alesandrepablo@gmail.com" style="color: #d93025;">Enviar correo</a></p>
+<p><strong>🕘Atención:  </strong> Lunes a Viernes 09:00 a 20:00 hs 
+</p><p><b>🏢 Atención únicamente con agenda previa.</b></p>
+</section>
+ <br>
+<style>
+#contacto { padding-bottom: 0 !important; }
+.redes-estudio-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 15px;
+    text-align: center;
+    font-family: 'Inter', sans-serif; 
+}
+.redes-titulo {
+    color: var(--primario);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+}
+.redes-titulo::after {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 2px;
+    background-color: var(--secundario);
+    margin: 6px auto 0; 
+}
+.redes-botones-grupo {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap; }
+.btn-red-estudio {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--primario);
+    color: #ffffff;
+    border: 1px solid var(--secundario);
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.04);
+    cursor: pointer;}
+.btn-red-estudio i {
+    font-size: 1.1rem;
+    color: var(--secundario); 
+    transition: color 0.3s;}
+.btn-red-estudio:hover {
+    background-color: var(--secundario);
+    color: var(--primario);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);}
+.btn-red-estudio:hover i {
+    color: var(--primario); }
+@media (max-width: 768px) {
+    .redes-botones-grupo { gap: 8px; }
+    .btn-red-estudio {
+        flex: 1;
+        min-width: 120px;
+        justify-content: center;
+        padding: 10px 12px;
+        font-size: 0.75rem; } }
+</style>
+<div class="redes-estudio-container">
+    <p class="redes-titulo">SÍGANOS EN NUESTRAS REDES</p>
+    <h6>ESTAMOS EMPESANDO EN REDES DESPUES DE MUCHOS AÑOS EJERCIENDO</h6>
+    <div class="redes-botones-grupo">
+        <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" class="btn-red-estudio instagram">
+            <i class="fab fa-instagram"></i>
+            <span>Instagram</span> 
+        </a>
+        <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer" class="btn-red-estudio tiktok">
+            <i class="fab fa-tiktok"></i>
+            <span>TikTok</span> 
+        </a>
+        <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" class="btn-red-estudio youtube">
+            <i class="fab fa-youtube"></i>
+            <span>YouTube</span>
+        </a>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const botonesRedes = document.querySelectorAll(".btn-red-estudio");
+    botonesRedes.forEach(boton => {
+        boton.addEventListener("click", function() {
+            console.log("Redirigiendo a red social del Estudio."); 
+        });
+    }); 
+});
+</script>
+
+<b> 
+<div class="bloque-confianza">  
+    <div class="item">✔️ Atención Profesional</div>  
+    <div class="item">✔️ Confidencialidad Asegurada</div>  
+    <div class="item">✔️ Experiencia en Litigios Complejos</div> </div></b>
+
+<!-- FOOTER 2 COLUMNAS ESTILO PABLO -->
+<footer style="background-color: var(--primario); color: #ffffff; padding: 2rem 1.5rem 1rem; border-top: 3px solid var(--secundario); text-align: left; font-family: 'Inter', sans-serif;">
+  <div style="max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; align-items: start;">
+<!-- Columna Izquierda: Marca + Horarios -->
+<span class="logo">⚖️ DR.<span>PABLO ALESANDRE</span>
+   <p style="font-size: 0.75rem; line-height: 1.6; color: #cccccc; margin-bottom: 1rem;">Estudio Jurídico &amp; Notarial en Montevideo.</p> </div>
+  <!-- Columna Derecha: Legal -->
+    <div>
+      <h4 style="color: #ffffff; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem; position: relative; padding-bottom: 5px; display: inline-block;">
+        Legal</br>
+  <span style="position: absolute; bottom: 0; left: 0; width: 22px; height: 2px; background: var(--secundario); border-radius: 2px;"></span>
+      </h4>
+ <!-- USO DE BOTONES PARA EVITAR BLOQUEOS -->
+    <button onclick="abrirModal('modal-privacidad')" style="background: none; border: none; display: block; font-size: 0.75rem; color: #dbe5ee; font-weight: 500; padding: 0.25rem 0; cursor: pointer; text-align: left; font-family: inherit;" onmouseover="this.style.color='var(--secundario)'" onmouseout="this.style.color='#dbe5ee'"><b>Política de privacidad</b></button>
+      
+      <button onclick="abrirModal('modal-terminos')" style="background: none; border: none; display: block; font-size: 0.75rem; color: #dbe5ee; font-weight: 500; padding: 0.25rem 0; cursor: pointer; text-align: left; font-family: inherit;" onmouseover="this.style.color='var(--secundario)'" onmouseout="this.style.color='#dbe5ee'"><b>Términos y condiciones</b></button></div> </div>    
+
+  <div style="max-width: 1100px; margin: 1.5rem auto 0; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; font-size: 0.7rem; color: #8ba0b4; letter-spacing: 0.5px;">
+    <p>© <span id="year-pablo"></span> <strong>PABLO ALESANDRE</strong> Montevideo, Uruguay · TODOS LOS DERECHOS RESERVADOS.</p>
+  </div>
+</footer>
+
+<!-- MODALES OCULTOS -->
+<div id="modal-privacidad" style="display: none; position: fixed; inset: 0; background: rgba(15, 28, 63, 0.8); z-index: 999999; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(3px);">
+  <div style="background: #fff; border-radius: 8px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 1.5rem; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.4); font-family: 'Inter', sans-serif; color: #333;">
+    <button onclick="cerrarModal('modal-privacidad')" style="position: absolute; top: 12px; right: 12px; background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: var(--primario); font-size: 1rem; display: flex; align-items: center; justify-content: center;">✖</button>
+    <h3 style="color: var(--primario); font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 2px solid var(--secundario); padding-bottom: 5px; display: inline-block;">Política de Privacidad</h3>
+    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;">En <strong>Pablo Alesandre</strong> respetamos tu privacidad. Los datos que ingresás en el formulario (nombre, CI, fecha, asunto) se utilizan únicamente para responder tu consulta y coordinar el servicio.</p>
+    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;">No compartimos tu información con terceros. Los datos se conservan solo el tiempo necesario para gestionar el servicio solicitado.</p>
+    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;">Conforme a la <strong>Ley 18.331 de Protección de Datos Personales</strong> de Uruguay, podés solicitar el acceso, rectificación o eliminación de tus datos escribiéndonos a <a href="https://wa.me/59898616458" target="_blank" style="color: var(--secundario); text-decoration: underline;">nuestro WhatsApp</a>.</p>
+    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;">Al enviar el formulario, aceptás esta política.</p>
+  </div>
+</div>
+
+<div id="modal-terminos" style="display: none; position: fixed; inset: 0; background: rgba(15, 28, 63, 0.8); z-index: 999999; align-items: center; justify-content: center; padding: 1rem; backdrop-filter: blur(3px);">
+  <div style="background: #fff; border-radius: 8px; max-width: 600px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 1.5rem; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.4); font-family: 'Inter', sans-serif; color: #333;">
+    <button onclick="cerrarModal('modal-terminos')" style="position: absolute; top: 12px; right: 12px; background: #f1f5f9; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; color: var(--primario); font-size: 1rem; display: flex; align-items: center; justify-content: center;">✖</button>
+    <h3 style="color: var(--primario); font-size: 1.2rem; margin-bottom: 1rem; border-bottom: 2px solid var(--secundario); padding-bottom: 5px; display: inline-block;">Términos y Condiciones</h3>
+    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>1. Servicio:</strong> Pablo Alesandre brinda servicios legales, jurídicos y notariales en Montevideo, Uruguay.</p>
+    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>2. Plazos:</strong> El tiempo estimado de respuesta y gestión puede variar según la complejidad del caso y las condiciones judiciales.</p>
+    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>3. Honorarios:</strong> Los precios publicados son orientativos. El valor final se confirma al momento de coordinar el servicio según la complejidad del caso.</p>
+    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>4. Responsabilidad:</strong> No nos hacemos responsables por la veracidad de los documentos entregados por el cliente.</p>
+    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>5. Pagos:</strong> Se coordinan al momento de la consulta.</p>
+    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;"><strong>6. Datos personales:</strong> El tratamiento de datos se rige por nuestra Política de Privacidad conforme a la Ley 18.331.</p>
+    <p style="font-size: 0.85rem; line-height: 1.6; margin-bottom: 0.8rem; text-align: left;">Para consultas escribinos a <a href="https://wa.me/59898616458" target="_blank" style="color: var(--secundario); text-decoration: underline;">nuestro WhatsApp</a>.</p>
+  </div>
+</div>
+
+<div id="chat-circle" onclick="toggleChat()">💬</div>  
+<div id="chat-container">  
+    <div id="chat-header">
+        <span>Asistente Jurídico Virtual</span>
+        <span onclick="toggleChat()" style="cursor:pointer; font-size: 1.2rem;">X</span> 
+    </div>  
+    <div id="chat-box">  
+        <div class="bot-msg">¡Hola! Soy el asistente virtual del <b>Dr. Pablo Alesandre Aizcorbe</b>. ¿En qué te podemos ayudar? Penal, Laboral, Civil, Familia y Escribanía.</div>   
+    </div>  
+    <div class="chat-input-area">  
+        <input type="text" id="user-input" placeholder="Escribe tu consulta aquí..." onkeypress="if(event.keyCode==13) sendMessage()">  
+        <button class="btn-enviar-chat" onclick="sendMessage()">➤</button></div></div>  
+<script>  
+// FUNCIONES PARA LAS POLÍTICAS
+function abrirModal(id) {
+    document.getElementById(id).style.display = 'flex';
+document.body.style.overflow = 'hidden'; }
+function cerrarModal(id) {
+    document.getElementById(id).style.display = 'none';
+ document.body.style.overflow = ''; }
+
+function toggleMenu() {  
+    const menu = document.getElementById('navMenu');  
+    menu.classList.toggle('active'); 
+}  
+function toggleDetalle(elemento) {  
+    elemento.classList.toggle("activo");  
+}  
+function toggleChat() {   
+    const c = document.getElementById('chat-container');  
+    c.style.display = (c.style.display === 'none' || c.style.display === '') ? 'flex' : 'none'; 
+}  
+function getBotResponse(userInput) {
+    const input = userInput.toLowerCase()
+                    .replace(/á/g, "a")
+                    .replace(/é/g, "e")
+                    .replace(/í/g, "i")
+                    .replace(/ó/g, "o")
+                    .replace(/ú/g, "u");
+    if (input.includes("hola") || input.includes("buen") || input.includes("saludos")) {
+        return "¡Hola! 👋 ¿En qué te podemos ayudar? Penal, Laboral, Civil, Familia y Escribanía."; 
+    }
+    if (input.includes("penal") || input.includes("fiscal") || input.includes("detenido") || input.includes("comisaria")) {
+        return "⚖️ <b>Área Penal:</b> Defensa y asistencia inmediata en fiscalías o comisarías de urgencia 24/7. <br><br><a href='https://wa.me/59898616458?text=URGENCIA%20PENAL' target='_blank' style='color:#27ae60;font-weight:bold;text-decoration:none;'>🚨 Contactar Urgencia Penal</a>";  
+    }
+    if (input.includes("divorcio") || input.includes("separar") || input.includes("separacion")) {
+        return "El estudio tramita divorcios por mutuo consentimiento, por sola voluntad o por causales. Para asesorarte sobre los requisitos y los plazos, te invitamos a coordinar una consulta privada.";  
+    }
+    if (input.includes("pension") || input.includes("diborcio") || input.includes("hijos") || input.includes("tenencia")|| input.includes("familia")  || input.includes("visita")) {
+        return "⚖️ <b>Área Familiar:</b> Atendemos asuntos de familia relacionados con pensión alimenticia, régimen de visitas, tenencia y divorcio. Es un área delicada que tratamos con absoluta confidencialidad. <br><br><a href='https://wa.me/59898616458?text=Consulta%20Familia' target='_blank' style='color:#27ae60;font-weight:bold;text-decoration:none;'>Consultar Caso de Familia</a>";  
+    }
+    if (input.includes("sucesi") || input.includes("herencia") || input.includes("testamento") || input.includes("heredar")) {
+        return "✍️ <b>Escribanía:</b> Realizamos la tramitación de sucesiones judiciales y notariales, aperturas de testamentos y particiones de bienes de forma ágil. ¿Ya hay un acuerdo entre los herederos?";  
+    }
+    if (input.includes("escribano") || input.includes("notarial") || input.includes("firma") || input.includes("certificar")) {
+        return "Ofrecemos servicios notariales completos: certificación de firmas, actas, poderes, protocolizaciones and asesoramiento en contratos de todo tipo."; 
+    }
+    if (input.includes("alquiler") || input.includes("arrendamiento") || input.includes("desalojo")) {
+        return "Brindamos asistencia legal tanto a propietarios como a inquilinos en la redacción de contratos de alquiler, garantías, rescisiones y procesos de desalojo.";  
+    }
+    if (input.includes("comprar") || input.includes("vender") || input.includes("propiedad") || input.includes("casa") || input.includes("terreno") || input.includes("inmueble")) {
+        return "Si estás por comprar o vender un inmueble, el Dr. Pablo Alesandre realiza el estudio de títulos, control de deudas y la escritura traslativa de dominio para garantizar una operación 100% segura.";  
+    }
+    if (input.includes("laboral") || input.includes("despido") || input.includes("trabajo") || input.includes("sueldo") || input.includes("liquidaci")) {
+        return "💼 <b>Derecho Laboral:</b> Asesoramos en materia laboral (cálculo de liquidaciones, despidos y audiencias en el MTSS). <br><br><a href='https://wa.me/59898616458?text=Consulta%20Laboral' target='_blank' style='color:#27ae60;font-weight:bold;text-decoration:none;'>Consultar Caso Laboral</a>"; 
+    }
+    if (input.includes("accidente") || input.includes("choque") || input.includes("transito")) {
+        return "Si sufriste un accidente de tránsito, te ayudamos a gestionar el reclamo ante las aseguradoras para obtener la indemnización correspondiente por daños y perjuicios.";  
+    }
+    if (input.includes("empresa") || input.includes("sociedad") || input.includes("sas") || input.includes("sa") || input.includes("srl")) {
+        return "Ayudamos a emprendedores and empresas en la constitución de Sociedades Anónimas, SRL y SAS, además de la redacción de contratos comerciales y estatutos.";  
+    }
+    if (input.includes("costo") || input.includes("precio") || input.includes("honorarios") || input.includes("cuanto cobra") || input.includes("cuanto")) {
+        return "Los honorarios profesionales se ajustan al Arancel Oficial y varían según la complejidad. Te sugerimos agendar una primera consulta o enviarnos un WhatsApp con los detalles de tu caso.";  
+    }
+    if (input.includes("contacto") || input.includes("telefono") || input.includes("celular") || input.includes("whatsapp") || input.includes("llamar") || input.includes("numero")) {
+        return "📲 Conéctate directo al WhatsApp del Dr. Alesandre: <br><br><a href='https://wa.me/59898616458' target='_blank' style='background:#27ae60;color:white;padding:8px 12px;border-radius:4px;text-decoration:none;display:inline-block;font-weight:bold;'>ABRIR WHATSAPP</a>";  
+    }
+    if (input.includes("ubicacion") || input.includes("donde estan") || input.includes("direccion") || input.includes("oficina") || input.includes("montevideo")) {
+        return "Nuestra oficina principal está ubicada en <b>Montevideo, Uruguay</b>. Atendemos consultas presenciales exclusivamente con agenda previa de lunes a viernes."; 
+    }
+    if (input.includes("horario") || input.includes("atienden") || input.includes("abierto")) {
+        return "El horario de atención del estudio es de <b>lunes a viernes de 09:00 a 18:00 hs</b>."; 
+    }
+    if (input.includes("feria") || input.includes("receso") || input.includes("julio")) {
+        return "🏛️ <b>Feria Judicial:</b> Durante los recesos de los tribunales (como del 1° al 15 de julio), la activity formal en juzgados se detiene. Sin embargo, en el estudio seguimos atendiendo consultas, analizando casos y preparando estrategias para la reapertura.";
+    }
+    if (input.includes("plazo") || input.includes("reclamar despido") || input.includes("tiempo para reclamar")) {
+        return "💼 <b>Plazo Laboral:</b> En Uruguay, el plazo para reclamar rubros laborales o indemnizaciones por despido es estricto. Te recomendamos iniciar la citación ante el MTSS lo antes posible para evitar la caducidad de tus derechos."; 
+    }
+    if (input.includes("requisito") || input.includes("documento") || input.includes("calcular liquidacion") || input.includes("recibo")) {
+        return "📜 <b>Documentación requerida:</b> Para realizar un cálculo de liquidación exacto, es indispensable contar con tus últimos recibos de sueldo, constancia de la fecha de ingreso y, si corresponde, la copia de la notificación del despido (ya sea por telegrama o WhatsApp)."; 
+    }
+    if (input.includes("tipo de divorcio") || input.includes("como es el divorcio")) {
+        return "🏛️ <b>Divorcios:</b> En Uruguay tramitamos divorcios bajo tres modalidades: por mutuo consentimiento de ambos cónyuges, por la sola voluntad de uno de ellos, o por causales específicas previstas en nuestro Código Civil."; 
+    }
+    if (input.includes("fija la pension") || input.includes("cuanto corresponde de pension") || input.includes("alimento ")) {
+        return "⚖️ <b>Pensión Alimenticia:</b> La pensión se calcula en base a las necesidades del menor y a las posibilidades económicas reales de los padres, buscando siempre un equilibrio justo o la homologación judicial de un acuerdo."; 
+    }
+    if (input.includes("virtual") || input.includes("zoom") || input.includes("videollamada") || input.includes("distancia") || input.includes("interior")) {
+        return "🖥️ <b>Consultas Virtuales:</b> Si te encuentras en el interior del país o prefieres no trasladarte, coordinamos sesiones seguras mediante Zoom, Google Meet o videollamada de WhatsApp. Puedes agendarla en la sección de citas."; 
+    }
+    if (input.includes("redes") || input.includes("instagram") || input.includes("facebook") || input.includes("web")) {
+        return "📱 Puedes seguir las actualizaciones legales y novedades del estudio a través de nuestros canales y contactarnos directamente mediante nuestro botón principal de WhatsApp en cualquier momento."; }
+    if (input.includes("gracias") || input.includes("impecable") || input.includes("bueno") || input.includes("barbaro") || input.includes("chau")) {
+return "¡A las órdenes! Muchas gracias por comunicarte con nuestro estudio jurídico. ⚖️";  }
+    return "Para evaluar correctamente tu situation y analizar la documentacion, le aconsejamos coordinar directamente con el Dr. Pablo Alesandre por WhatsApp. <br><br><a href='https://wa.me/59898616458' target='_blank' style='color:#27ae60;font-weight:bold;text-decoration:none;'>Hacer clic aquí para chatear</a>"; }
+function sendMessage() {  
+    const input = document.getElementById('user-input');  
+    const box = document.getElementById('chat-box');  
+    const text = input.value.trim();  
+    if(!text) return;  
+    box.innerHTML += `<div class="user-msg">${text}</div>`;  
+    input.value = "";  
+    box.scrollTop = box.scrollHeight;  
+    const respuestaBot = getBotResponse(text);
+    setTimeout(() => {  
+        box.innerHTML += `<div class="bot-msg">${respuestaBot}</div>`;  
+        box.scrollTop = box.scrollHeight; 
+    }, 600); }  
+function enviarAgenda(e) {  
+    e.preventDefault();  
+    const nombre = document.getElementById('nombre').value;  
+    const asunto = document.getElementById('asunto').value;  
+    const fecha = document.getElementById('fecha').value;  
+    const hora = document.getElementById('hora').value;  
+    const texto = `Hola Dr. Alesandre Aizcorbe, soy ${nombre}. Quisiera agendar una consulta por un tema de ${asunto} para el día ${fecha} a las ${hora} hs.`;  
+    window.open(`https://wa.me/59898616458?text=${encodeURIComponent(texto)}`, '_blank'); }  
+function toggleZoom(event, elemento) { 
+    event.stopPropagation(); 
+    if (elemento.classList.contains('agrandado')) {
+elemento.classList.remove('agrandado');
+    } else {
+document.querySelectorAll('.diploma-card').forEach(card => card.classList.remove('agrandado'));
+elemento.classList.add('agrandado'); } }
+document.addEventListener('click', function(event) {
+if (!event.target.closest('.diploma-card')) {
+document.querySelectorAll('.diploma-card').forEach(card => card.classList.remove('agrandado')); } });
+const mensajes = [
+    "⚖️ Agenda abierta para consultas.",
+    "📅 Quedan turnos disponibles esta semana.",
+    "💼 Consultas laborales y despidos.",
+    "🏛️ Atención en Derecho Penal y Civil.",
+    "📞 Escribinos por WhatsApp para asesorarte.",
+    "✍️ Services notariales disponibles." ];
+let indice = 0;
+function mostrarNotificacion() {
+    const aviso = document.getElementById("notificacion");
+    if(aviso) {
+        aviso.innerHTML = mensajes[indice];
+        aviso.classList.add("mostrar");
+        setTimeout(() => { aviso.classList.remove("mostrar");}, 5000);
+        indice = (indice + 1) % mensajes.length; } }
+setInterval(mostrarNotificacion, 12000);
+setTimeout(mostrarNotificacion, 3000);
+
+// Poner el año automático en el footer
+document.addEventListener("DOMContentLoaded", function () {
+    const yearEl = document.getElementById('year-pablo');
+    if (yearEl) yearEl.textContent = new Date().getFullYear();
+});
+</script> </body></html>
